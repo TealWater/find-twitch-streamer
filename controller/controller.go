@@ -29,12 +29,10 @@ func GetHomePageHandler(w http.ResponseWriter, r *http.Request) {
 
 func FindStreamHandler(w http.ResponseWriter, r *http.Request) {
 	names := r.FormValue("streamerNames")
-
 	log.Println(names)
 
+	// redirect to /home if text input is empty
 	if len(names) < 1 {
-		tpl, _ = tpl.ParseGlob("views/*.html")
-		//tpl.ExecuteTemplate(w, "home.html", nil)
 		http.Redirect(w, r, "localhost:500/home", http.StatusTemporaryRedirect)
 		return
 	}
@@ -43,7 +41,12 @@ func FindStreamHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println(stringSlice)
 
 	client := http.Client{}
-	url := "https://api.twitch.tv/helix/streams?user_login=frslushh&user_login=clix&user_login=pewdiepie"
+	url := "https://api.twitch.tv/helix/streams?"
+
+	twitch.FormatUrl(&stringSlice, &url)
+
+	log.Println(url)
+
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		//Handle Error

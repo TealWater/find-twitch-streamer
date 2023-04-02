@@ -41,3 +41,22 @@ func ProcessNames(names *string) (newNames []string) {
 
 	return stringSlice
 }
+
+/*
+Adds '&' to the twitch api url
+*/
+func FormatUrl(stringSlice *[]string, url *string) {
+	var i int = 0
+	var length int = len(*stringSlice)
+	for _, v := range *stringSlice {
+		user := "user_login=" + v
+
+		if i < length-1 {
+			user += "&"
+		}
+
+		(*stringSlice)[i] = user
+		*url += (*stringSlice)[i]
+		i += 1
+	}
+}
