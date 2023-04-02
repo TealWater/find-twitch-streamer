@@ -32,31 +32,31 @@ Takes a string full of comma separated twitch user names and formats them to be 
 */
 func ProcessNames(names *string) (newNames []string) {
 
-	stringSlice := strings.Split(*names, ",")
+	streamNames := strings.Split(*names, ",")
 	var i int = 0
-	for _, v := range stringSlice {
-		stringSlice[i] = strings.ReplaceAll(strings.ToLower(v), " ", "")
+	for _, v := range streamNames {
+		streamNames[i] = strings.ReplaceAll(strings.ToLower(v), " ", "")
 		i += 1
 	}
 
-	return stringSlice
+	return streamNames
 }
 
 /*
 Adds '&' to the twitch api url
 */
-func FormatUrl(stringSlice *[]string, url *string) {
+func FormatUrl(streamNames *[]string, url *string) {
 	var i int = 0
-	var length int = len(*stringSlice)
-	for _, v := range *stringSlice {
+	var length int = len(*streamNames)
+	for _, v := range *streamNames {
 		user := "user_login=" + v
 
 		if i < length-1 {
 			user += "&"
 		}
 
-		(*stringSlice)[i] = user
-		*url += (*stringSlice)[i]
+		(*streamNames)[i] = user
+		*url += (*streamNames)[i]
 		i += 1
 	}
 }

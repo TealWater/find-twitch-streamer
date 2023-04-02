@@ -8,9 +8,11 @@
 
 <div class="form">
 <form method="GET" action="/findStreamer">
-    <input type="text" name="streamerNames" value="enter streamer username here: frslushh" />
+    <input type="text" id="streamerNamesID" name="streamerNames" value="enter streamer username here: frslushh" />
     <br><br>
-    <button type="submit" action="submit">submit</button>
+    <button type="submit" 
+    onclick="document.getElementById('streamerNamesID').value"
+    name="streamerButton" action="submit">submit</button>
 
 </form>
 

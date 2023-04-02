@@ -28,8 +28,13 @@ func GetHomePageHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func FindStreamHandler(w http.ResponseWriter, r *http.Request) {
+
+	var err error = nil
+	if err = r.ParseForm(); err != nil {
+		log.Println("can't parse form")
+		log.Fatal(err)
+	}
 	names := r.FormValue("streamerNames")
-	log.Println(names)
 
 	// redirect to /home if text input is empty
 	if len(names) < 1 {
@@ -37,13 +42,13 @@ func FindStreamHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	stringSlice := twitch.ProcessNames(&names)
-	log.Println(stringSlice)
+	streamNames := twitch.ProcessNames(&names)
+	log.Println(streamNames)
 
 	client := http.Client{}
 	url := "https://api.twitch.tv/helix/streams?"
 
-	twitch.FormatUrl(&stringSlice, &url)
+	twitch.FormatUrl(&streamNames, &url)
 
 	log.Println(url)
 
