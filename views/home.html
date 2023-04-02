@@ -2,12 +2,14 @@
 <html>
 
 <div>
-    <header>Home</header>
+    <h1>Home</h1>
+    <br><br><br>
 </div>
 
 <div class="form">
-<form action="POST" action="/findStreamer">
-    <input type="text" value="enter streamer username here: frslushh" />
+<form method="GET" action="/findStreamer">
+    <input type="text" name="streamerNames" value="enter streamer username here: frslushh" />
+    <br><br>
     <button type="submit" action="submit">submit</button>
 
 </form>

@@ -23,11 +23,25 @@ func init() {
 var tpl *template.Template
 
 func GetHomePageHandler(w http.ResponseWriter, r *http.Request) {
-	tpl, _ = tpl.ParseFiles("views/home.html")
+	tpl, _ = tpl.ParseGlob("views/*.html")
 	tpl.ExecuteTemplate(w, "home.html", nil)
 }
 
 func FindStreamHandler(w http.ResponseWriter, r *http.Request) {
+	names := r.FormValue("streamerNames")
+
+	log.Println(names)
+
+	if len(names) < 1 {
+		tpl, _ = tpl.ParseGlob("views/*.html")
+		//tpl.ExecuteTemplate(w, "home.html", nil)
+		http.Redirect(w, r, "localhost:500/home", http.StatusTemporaryRedirect)
+		return
+	}
+
+	stringSlice := twitch.ProcessNames(&names)
+	log.Println(stringSlice)
+
 	client := http.Client{}
 	url := "https://api.twitch.tv/helix/streams?user_login=frslushh&user_login=clix&user_login=pewdiepie"
 	req, err := http.NewRequest("GET", url, nil)

@@ -1,6 +1,9 @@
 package utils
 
-import "time"
+import (
+	"strings"
+	"time"
+)
 
 type TwitchUsers struct {
 	Data []struct {
@@ -22,4 +25,19 @@ type TwitchUsers struct {
 	} `json:"data"`
 	Pagination struct {
 	} `json:"pagination"`
+}
+
+/*
+Takes a string full of comma separated twitch user names and formats them to be sent to the twitch api
+*/
+func ProcessNames(names *string) (newNames []string) {
+
+	stringSlice := strings.Split(*names, ",")
+	var i int = 0
+	for _, v := range stringSlice {
+		stringSlice[i] = strings.ReplaceAll(strings.ToLower(v), " ", "")
+		i += 1
+	}
+
+	return stringSlice
 }
