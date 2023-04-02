@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<div>
+    <h1>Twitch User does not exist or is not streaming</h1>
+    <br><br><br>
+</div>
+
+<div>
+    <div class="buttons">
+        <form action="/notFoundRedirect" method="POST">
+            <button name="backToHome" class="action_btn submit" type="submit" value="Home"
+            onclick="document.getElementById('backToHome').value">Home</button>
+            <button name="randomStream" class="action_btn cancel" type="submit" value="Find Random Stream"
+            onclick="document.getElementById('randomStream').value">Find Random Stream</button>
+            <p id="saved"></p>
+        </form>
+    </div>
+
+</div>
+
+
+
+</html>
+
+
+<style>
+    .buttons {
+        width: 960px;
+        margin: 0 auto;
+    }
+
+    .action_btn {
+        display: inline-block;
+        width: calc(50% - 4px);
+        margin: 0 auto;
+    }
+</style>

@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	twitch "twitch_auth/webServ/utils"
 
 	"github.com/joho/godotenv"
@@ -25,6 +26,31 @@ var tpl *template.Template
 func GetHomePageHandler(w http.ResponseWriter, r *http.Request) {
 	tpl, _ = tpl.ParseGlob("views/*.html")
 	tpl.ExecuteTemplate(w, "home.html", nil)
+}
+
+func GetNotFoundHandler(w http.ResponseWriter, r *http.Request) {
+	tpl, _ = tpl.ParseGlob("views/*.html")
+	tpl.ExecuteTemplate(w, "notFound.html", nil)
+}
+
+func NotFoundRedirectHandler(w http.ResponseWriter, r *http.Request) {
+	var err error = nil
+	if err = r.ParseForm(); err != nil {
+		log.Println("can't parse form")
+		log.Fatal(err)
+	}
+
+	tpl, _ = tpl.ParseGlob("views/*.html")
+	for key := range r.Form {
+		/*can't use <http.Redirect() here> beacuse http.ResponseWriter was already in used from <func FindStreamHandler>*/
+		if strings.Compare(key, "backToHome") == 0 {
+			tpl.ExecuteTemplate(w, "home.html", nil)
+		} else if strings.Compare(key, "randomStream") == 0 {
+			tpl.ExecuteTemplate(w, "notFound.html", nil)
+		}
+
+	}
+
 }
 
 func FindStreamHandler(w http.ResponseWriter, r *http.Request) {
@@ -101,7 +127,7 @@ func FindStreamHandler(w http.ResponseWriter, r *http.Request) {
 
 		http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 	} else {
-		url := "http://127.0.0.1:5500/hell"
+		url := "http://localhost:5500/notFound"
 
 		http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 

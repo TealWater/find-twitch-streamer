@@ -41,7 +41,9 @@ func main() {
 	// }
 
 	http.HandleFunc("/home", control.GetHomePageHandler)
+	http.HandleFunc("/notFound", control.GetNotFoundHandler)
 	http.HandleFunc("/findStreamer", control.FindStreamHandler)
+	http.HandleFunc("/notFoundRedirect", control.NotFoundRedirectHandler)
 
 	// http.HandleFunc("/hello", func(w http.ResponseWriter, r *http.Request) {
 
