@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"io"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
 	"strings"
@@ -33,6 +34,56 @@ func GetNotFoundHandler(w http.ResponseWriter, r *http.Request) {
 	tpl.ExecuteTemplate(w, "notFound.html", nil)
 }
 
+func GetRandomStreamer(w http.ResponseWriter, r *http.Request) (finalUrl string) {
+	log.Println("you made it!!!")
+	client := http.Client{}
+	url := "https://api.twitch.tv/helix/streams?"
+
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		//Handle Error
+		log.Println("here")
+		log.Println(err)
+	}
+
+	req.Header = http.Header{
+		"Authorization": {os.Getenv("BEARER_TOKEN")},
+		"Client-Id":     {os.Getenv("CLIENT_ID")},
+	}
+
+	res, err := client.Do(req)
+	if err != nil {
+		//Handle Error
+		log.Println(err)
+	}
+
+	bodyBytes, err := io.ReadAll(res.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	bodyString := string(bodyBytes)
+	log.Println(bodyString)
+	//fmt.Fprintf(w, bodyString)
+	fmt.Println("hi")
+
+	/*Parsing out twitch streamer username*/
+	twitchUser := new(twitch.TwitchUsers)
+	err = json.Unmarshal(bodyBytes, &twitchUser)
+	if err != nil {
+		log.Println()
+		log.Println("can't parse json")
+		log.Fatal(err)
+	}
+
+	//get the length of the names and choose one at random
+
+	length := len(twitchUser.Data)
+	val := rand.Intn(length)
+	url = "https://www.twitch.tv/" + twitchUser.Data[val].UserLogin
+	//http.Redirect(w, r, url, http.StatusTemporaryRedirect)
+	return url
+}
+
 func NotFoundRedirectHandler(w http.ResponseWriter, r *http.Request) {
 	var err error = nil
 	if err = r.ParseForm(); err != nil {
@@ -42,11 +93,11 @@ func NotFoundRedirectHandler(w http.ResponseWriter, r *http.Request) {
 
 	tpl, _ = tpl.ParseGlob("views/*.html")
 	for key := range r.Form {
-		/*can't use <http.Redirect() here> beacuse http.ResponseWriter was already in used from <func FindStreamHandler>*/
+		/*can't use <http.Redirect()> here beacuse <http.ResponseWriter> was already in used from <func FindStreamHandler()>*/
 		if strings.Compare(key, "backToHome") == 0 {
 			tpl.ExecuteTemplate(w, "home.html", nil)
 		} else if strings.Compare(key, "randomStream") == 0 {
-			tpl.ExecuteTemplate(w, "notFound.html", nil)
+			tpl.ExecuteTemplate(w, "randomStreamer.html", nil)
 		}
 
 	}
@@ -63,7 +114,11 @@ func FindStreamHandler(w http.ResponseWriter, r *http.Request) {
 	names := r.FormValue("streamerNames")
 
 	// redirect to /home if text input is empty
-	if len(names) < 1 {
+	if len(names) < 1 && r.FormValue("randomStream") != "" {
+		randdomStreamer := GetRandomStreamer(w, r)
+		http.Redirect(w, r, randdomStreamer, http.StatusTemporaryRedirect)
+		return
+	} else if len(names) < 1 {
 		http.Redirect(w, r, "localhost:500/home", http.StatusTemporaryRedirect)
 		return
 	}
