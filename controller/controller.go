@@ -2,7 +2,6 @@ package controller
 
 import (
 	"encoding/json"
-	"fmt"
 	"html/template"
 	"io"
 	"log"
@@ -35,40 +34,13 @@ func GetNotFoundHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetRandomStreamer(w http.ResponseWriter, r *http.Request) (finalUrl string) {
-	log.Println("you made it!!!")
-	client := http.Client{}
 	url := "https://api.twitch.tv/helix/streams?"
 
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		//Handle Error
-		log.Println("here")
-		log.Println(err)
-	}
-
-	req.Header = http.Header{
-		"Authorization": {os.Getenv("BEARER_TOKEN")},
-		"Client-Id":     {os.Getenv("CLIENT_ID")},
-	}
-
-	res, err := client.Do(req)
-	if err != nil {
-		//Handle Error
-		log.Println(err)
-	}
-
-	bodyBytes, err := io.ReadAll(res.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
-	bodyString := string(bodyBytes)
-	log.Println(bodyString)
-	//fmt.Fprintf(w, bodyString)
-	fmt.Println("hi")
+	bodyBytes := hitTwitchApi(w, *r, url, nil)
 
 	/*Parsing out twitch streamer username*/
 	twitchUser := new(twitch.TwitchUsers)
-	err = json.Unmarshal(bodyBytes, &twitchUser)
+	err := json.Unmarshal(bodyBytes, &twitchUser)
 	if err != nil {
 		log.Println()
 		log.Println("can't parse json")
@@ -76,11 +48,9 @@ func GetRandomStreamer(w http.ResponseWriter, r *http.Request) (finalUrl string)
 	}
 
 	//get the length of the names and choose one at random
-
 	length := len(twitchUser.Data)
 	val := rand.Intn(length)
 	url = "https://www.twitch.tv/" + twitchUser.Data[val].UserLogin
-	//http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 	return url
 }
 
@@ -126,10 +96,41 @@ func FindStreamHandler(w http.ResponseWriter, r *http.Request) {
 	streamNames := twitch.ProcessNames(&names)
 	log.Println(streamNames)
 
-	client := http.Client{}
 	url := "https://api.twitch.tv/helix/streams?"
+	bodyBytes := hitTwitchApi(w, *r, url, streamNames)
 
-	twitch.FormatUrl(&streamNames, &url)
+	/*Parsing out twitch streamer username*/
+	twitchUser := new(twitch.TwitchUsers)
+	err = json.Unmarshal(bodyBytes, &twitchUser)
+	if err != nil {
+		log.Println()
+		log.Println("can't parse json")
+		log.Fatal(err)
+	}
+
+	// for index := range twitchUser.Data {
+	// 	fmt.Fprintf(w, twitchUser.Data[index].UserLogin+"\n")
+	// 	fmt.Fprintln(w, "length: "+strconv.Itoa(len(twitchUser.Data)))
+	// }
+
+	length := len(twitchUser.Data)
+	//TODO: allow users to choose which streamers to watch if 2 or more that the users entered are online
+	if length > 0 {
+		userName := twitchUser.Data[0].UserLogin
+		url := "https://www.twitch.tv/" + userName
+		http.Redirect(w, r, url, http.StatusTemporaryRedirect)
+	} else {
+		url := "http://localhost:5500/notFound"
+		http.Redirect(w, r, url, http.StatusTemporaryRedirect)
+	}
+}
+
+func hitTwitchApi(w http.ResponseWriter, r http.Request, url string, streamNames []string) (data []byte) {
+	client := http.Client{}
+
+	if streamNames != nil {
+		twitch.FormatUrl(&streamNames, &url)
+	}
 
 	log.Println(url)
 
@@ -157,34 +158,5 @@ func FindStreamHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	bodyString := string(bodyBytes)
 	log.Println(bodyString)
-	//fmt.Fprintf(w, bodyString)
-	fmt.Println("hi")
-
-	/*Parsing out twitch streamer username*/
-	twitchUser := new(twitch.TwitchUsers)
-	err = json.Unmarshal(bodyBytes, &twitchUser)
-	if err != nil {
-		log.Println()
-		log.Println("can't parse json")
-		log.Fatal(err)
-	}
-
-	// for index := range twitchUser.Data {
-	// 	fmt.Fprintf(w, twitchUser.Data[index].UserLogin+"\n")
-	// 	fmt.Fprintln(w, "length: "+strconv.Itoa(len(twitchUser.Data)))
-	// }
-
-	length := len(twitchUser.Data)
-
-	if length > 0 {
-		userName := twitchUser.Data[0].UserLogin
-		url := "https://www.twitch.tv/" + userName
-
-		http.Redirect(w, r, url, http.StatusTemporaryRedirect)
-	} else {
-		url := "http://localhost:5500/notFound"
-
-		http.Redirect(w, r, url, http.StatusTemporaryRedirect)
-
-	}
+	return bodyBytes
 }
