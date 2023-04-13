@@ -63,7 +63,7 @@ func NotFoundRedirectHandler(w http.ResponseWriter, r *http.Request) {
 
 	tpl, _ = tpl.ParseGlob("views/*.html")
 	for key := range r.Form {
-		/*can't use <http.Redirect()> here beacuse <http.ResponseWriter> was already in used from <func FindStreamHandler()>*/
+		/*can't use <http.Redirect()> here beacuse <http.ResponseWriter> was already in use from <func FindStreamHandler()>*/
 		if strings.Compare(key, "backToHome") == 0 {
 			tpl.ExecuteTemplate(w, "home.html", nil)
 		} else if strings.Compare(key, "randomStream") == 0 {
@@ -107,11 +107,6 @@ func FindStreamHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println("can't parse json")
 		log.Fatal(err)
 	}
-
-	// for index := range twitchUser.Data {
-	// 	fmt.Fprintf(w, twitchUser.Data[index].UserLogin+"\n")
-	// 	fmt.Fprintln(w, "length: "+strconv.Itoa(len(twitchUser.Data)))
-	// }
 
 	length := len(twitchUser.Data)
 	//TODO: allow users to choose which streamers to watch if 2 or more that the users entered are online
