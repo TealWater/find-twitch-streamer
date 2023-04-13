@@ -10,7 +10,7 @@ Setup:
     - can be found in your twitch developer dashboard {'https://dev.twitch.tv/console/apps'}
     - add {'CLIENT_ID'} to .env file and save.
   3b) add http://localhost:5500/home as an authorized app link
-   - load the home page {localhost:5500/home} --> {go run main.go}
+   - load the home page {localhost:5500/home} by running --> {go run main.go}
    - paste your version of this url in the url bar: 
    https://id.twitch.tv/oauth2/authorize?response_type=token&client_id={add clinet id here}&redirect_uri=http://localhost:5500/home&scope=channel%3Amanage%3Apolls+channel%3Aread%3Apolls&state=c3ab8aa609ea11e793ae92361f002671
    
