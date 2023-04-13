@@ -1,10 +1,10 @@
 package main
 
 import (
+	control "find-twitch-streamer/controller"
 	"fmt"
 	"log"
 	"net/http"
-	control "twitch_auth/webServ/controller"
 )
 
 func main() {
