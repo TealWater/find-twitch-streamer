@@ -8,10 +8,10 @@
         integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
 </head>
 
-<body class="bg-gradient bg-info">
-    <div class="container">
-        <div>
-            <h1>Home</h1>
+<body class="background">
+    <div class="container-fluid">
+        <div class="title">
+            <h1>Find A Twich Streamer</h1>
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
                 integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
                 crossorigin="anonymous"></script>
@@ -22,7 +22,7 @@
             <form method="GET" action="/findStreamer">
 
                 <input type="text" id="streamerNamesID" name="streamerNames"
-                    placeholder="enter streamer username here: frslushh" />
+                    class="form-control" placeholder="enter streamer username here: frslushh" />
 
                 <br><br>
 
@@ -47,20 +47,30 @@
 
 
 <style>
-    .bg-info {
-        --bs-bg-opacity: 0.5;
-        background-color: rgba(var(--bs-info-rgb), var(--bs-bg-opacity)) !important;
+    .background {
+        width: 100%;
+        height: 100vh;
+        background-image: linear-gradient(silver 45%, orange);
+        
+       
     }
 
-    .form {
-        align-content: center;
+    .title{
+        text-align: center;
+        margin-top: 5vh;
+        margin-bottom: -5vh;
     }
 
+    .form{
+        margin-top: 30vh;
+    }
+    
     input {
-        width: 75%;
+        width: auto;
     }
 
     button {
-        width: 25%;
+        width: 49%;
+        margin-left: 1vh;
     }
 </style>
