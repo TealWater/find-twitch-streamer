@@ -66,8 +66,6 @@ func NotFoundRedirectHandler(w http.ResponseWriter, r *http.Request) {
 		/*can't use <http.Redirect()> here beacuse <http.ResponseWriter> was already in use from <func FindStreamHandler()>*/
 		if strings.Compare(key, "backToHome") == 0 {
 			tpl.ExecuteTemplate(w, "home.html", nil)
-		} else if strings.Compare(key, "randomStream") == 0 {
-			tpl.ExecuteTemplate(w, "randomStreamer.html", nil)
 		}
 
 	}
@@ -89,7 +87,7 @@ func FindStreamHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, randdomStreamer, http.StatusTemporaryRedirect)
 		return
 	} else if len(names) < 1 {
-		http.Redirect(w, r, "localhost:500/home", http.StatusTemporaryRedirect)
+		http.Redirect(w, r, "https://find-twitch-streamer.onrender.com", http.StatusTemporaryRedirect)
 		return
 	}
 
@@ -115,7 +113,7 @@ func FindStreamHandler(w http.ResponseWriter, r *http.Request) {
 		url := "https://www.twitch.tv/" + userName
 		http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 	} else {
-		url := "http://localhost:5500/notFound"
+		url := "https://find-twitch-streamer.onrender.com/notFound"
 		http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 	}
 }
