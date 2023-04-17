@@ -1,4 +1,4 @@
-module twitch_auth/webServ
+module find-twitch-streamer
 
 go 1.20
 

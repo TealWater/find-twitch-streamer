@@ -20,10 +20,10 @@ Setup:
       3c) your access token credential should be returned in the url after you authenticate with twitch
         - http://localhost:5500/home#access_token={access token is here}&scope=channel%3Amanage%3Apolls+channel%3Aread%3Apolls&state=c3ab8aa609ea11e793ae92361f002671&token_type=bearer
 
+
 4) add your {Access Token or Bearer Token} to your .env file --> {'BEARER_TOKEN: Bearer {add value here}'}
 
 5) all good to go
-
 
 Credit:
 Inspiried by @hox | https://github.com/hox/someones.live

@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	twitch "find-twitch-streamer/utils"
 	"html/template"
 	"io"
 	"log"
@@ -9,7 +10,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	twitch "twitch_auth/webServ/utils"
 
 	"github.com/joho/godotenv"
 )
