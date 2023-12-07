@@ -1,6 +1,9 @@
 # find-twitch-streamer
 Golang backend with basic html / css frontend. You type in the Twitch streamer's username. If they are live you are redirected to their stream. If they are not live, you are forwarded back to the home page.
 
+**This app is hosted on www.render.com | The server instance is spun down due to inactivity. When you click
+on the link, it will take 2 mins for the frontend and backend to spin up.**
+
 Setup:
 
 1) Clone the repo in an empty folder  --> change go.mod file to 'find-twitch-streamer' and all relevant modules
