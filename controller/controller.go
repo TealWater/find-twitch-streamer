@@ -138,6 +138,7 @@ func hitTwitchApi(w http.ResponseWriter, r http.Request, url string, streamNames
 		"Authorization": {os.Getenv("BEARER_TOKEN")},
 		"Client-Id":     {os.Getenv("CLIENT_ID")},
 	}
+	log.Println("*****Auth: ", req.Header.Values("Authorization"))
 
 	res, err := client.Do(req)
 	if err != nil {
