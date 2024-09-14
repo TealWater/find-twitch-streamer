@@ -89,7 +89,7 @@ func FindStreamHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, randdomStreamer, http.StatusTemporaryRedirect)
 		return
 	} else if len(names) < 1 {
-		http.Redirect(w, r, "localhost:500/home", http.StatusTemporaryRedirect)
+		http.Redirect(w, r, "localhost:8080/home", http.StatusTemporaryRedirect)
 		return
 	}
 
@@ -140,6 +140,8 @@ func hitTwitchApi(w http.ResponseWriter, r http.Request, url string, streamNames
 		"Authorization": {os.Getenv("BEARER_TOKEN")},
 		"Client-Id":     {os.Getenv("CLIENT_ID")},
 	}
+
+	log.Println("*****Auth: ", req.Header.Values("Authorization"))
 
 	res, err := client.Do(req)
 	if err != nil {
